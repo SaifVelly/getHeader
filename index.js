@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { AcceptedLanguages, getHost } = require('./modules/Header');  // Import both correctlyconst app = express();
+const { AcceptedLanguages, getHost } = require('./modules/GetHeader');  // Import both correctlyconst app = express();
 app.use(express.json());
 
 
