@@ -1,0 +1,14 @@
+{
+  "name": "get-req",
+  "version": "1.0.0",
+  "description": "This is a module that helps you understand your HTTP request from an express server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kssim Mohammed",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
