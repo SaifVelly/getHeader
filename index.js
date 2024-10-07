@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { AcceptedLanguages, getHost } = require('./modules/GetHeader');  // Import both correctlyconst app = express();
+const { AcceptedLanguages, getHost, NavigatorBasedOn, OS } = require('./modules/GetHeader');  // Import both correctlyconst app = express();
 app.use(express.json());
 
 
@@ -11,11 +11,11 @@ app.get('/',AcceptedLanguages, getHost, (req, res) => {
 });
 
 
-app.get('/test', getHost, (req, res) => {
+app.get('/test', OS, (req, res) => {
     res.send(req.headers);
 });
-app.get('/p', (req, res) => {
-    res.send(Object.keys(req.headers));
+app.get('/p',NavigatorBasedOn, (req, res) => {
+    res.send(req.headers);
 });
 
 app.listen(3000, () => {

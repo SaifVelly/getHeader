@@ -1,14 +1,4 @@
-// function accessHeaders(req, res) {
-//     const { host, connection, 'user-agent': userAgent, 'content-type': contentType, 'accept-language':AcceptedLanguages } = req.headers;
-//     console.log('Host:', host);
-//     console.log('Connection:', connection);
-//     console.log('User-Agent:', userAgent);
-//     console.log('Content-Type:', contentType);
-//     console.log('accept-laanguage',AcceptedLanguages );
-  
-//   }
-
-// A function to get the host 
+// In this file there are multiple modules to get informations form the header's req of GET HTTP method
 
 function getHost(req, res, next){
     // console.log(req.url)
@@ -55,13 +45,68 @@ function AcceptedLanguages(req, res, next){
     next();
     }catch(err){
         console.log("Error : "+err);
+        return next(err);
     }
 
 }
 
+// A function to get what the navigator is based on
+function NavigatorBasedOn(req, res, next){
+    const str = req.headers['user-agent'];
+    if(!str || str.length == 0){
+        console.error("There is no user-agent at the header");
+        return next(new Error("No user-agent found"));
+    }
+    try{
+    const StrArr = str.split('/');
+    const version = StrArr[1].split('(');
+    console.log(StrArr[0]+ ' : '+version[0] );
+    next();
+    } catch(err){
+        console.error("Error : "+ err);
+        return next(err);
+    }
+
+
+}
+
+
+
+// A function to get the operating system of the client
+function OS(req, res, next) {
+    const userAgent = req.headers['user-agent'];
+
+    if (!userAgent || userAgent.length === 0) {
+        console.error("There is no user-agent in the header");
+        return next(new Error("No user-agent found"));
+    }
+
+    try {
+        const osRegex = /Windows NT|Mac OS X|Linux|Android|iOS/;
+        const osMatch = userAgent.match(osRegex);
+
+        if (osMatch) {
+            const operatingSystem = osMatch[0];
+            console.log("Operating System:", operatingSystem);
+            res.locals.operatingSystem = operatingSystem;
+        } else {
+            console.error("Could not determine operating system");
+            return next(new Error("Could not determine operating system"));
+        }
+
+        next();
+    } catch (err) {
+        console.error("Error extracting operating system information: " + err);
+        return next(err);
+    }
+}
+
+
 
 module.exports = {
     AcceptedLanguages,
-    getHost
+    getHost,
+    NavigatorBasedOn,
+    OS
 };
 // module.exports = accessHeaders;
