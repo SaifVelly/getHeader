@@ -6,6 +6,8 @@ function getHost(req, res, next){
     if(!host){
         console.error('Host not found');
         return res.status(400).send('Host not found');
+        next();
+
     }
     console.log('The host is:', host);
     next();
@@ -21,6 +23,8 @@ function AcceptedLanguages(req, res, next){
     if (!acceptedLang) {
         console.error('Accept-Language header not found.');
         return res.status(400).send('Accept-Language header is missing.');
+        next();
+
     }
 
     try{
@@ -29,6 +33,8 @@ function AcceptedLanguages(req, res, next){
     if (!languages || languages.length === 0) {
         console.error('Invalid Accept-Language header format.');
         return res.status(400).send('Invalid Accept-Language header format.');
+        next();
+
     }
 
     languages.forEach((language) => {
@@ -52,13 +58,15 @@ function AcceptedLanguages(req, res, next){
 
 // A function to get what the navigator is based on
 function NavigatorBasedOn(req, res, next){
-    const str = req.headers['user-agent'];
-    if(!str || str.length == 0){
+    const UserAgent = req.headers['user-agent'];
+    if(!UserAgent || UserAgent.length == 0){
         console.error("There is no user-agent at the header");
-        return next(new Error("No user-agent found"));
+        res.status(400).send("No user-agent found");
+        next();
+
     }
     try{
-    const StrArr = str.split('/');
+    const StrArr = UserAgent.split('/');
     const version = StrArr[1].split('(');
     console.log(StrArr[0]+ ' : '+version[0] );
     next();
@@ -71,6 +79,25 @@ function NavigatorBasedOn(req, res, next){
 }
 
 
+// A function that helps u get the client's Navigator
+
+function Navigator(req, res, next){
+    const UserAgent = req.headers['user-agent'];
+    if(!UserAgent || UserAgent.length == 0){
+        console.error("There is no user-agent at the header");
+        res.status(400).send("No user-agent found");
+    }
+    try{
+    const elts = UserAgent.split(' ');
+    console.log(elts[elts.length - 1]);
+    next();
+    } catch(err){
+        console.error("Error : "+err);
+        return(next(err));
+    }
+}
+
+
 
 // A function to get the operating system of the client
 function OS(req, res, next) {
@@ -78,8 +105,10 @@ function OS(req, res, next) {
 
     if (!userAgent || userAgent.length === 0) {
         console.error("There is no user-agent in the header");
-        return next(new Error("No user-agent found"));
+        res.status(400).send("No user-agent found");
+        next();
     }
+    
 
     try {
         const osRegex = /Windows NT|Mac OS X|Linux|Android|iOS/;
@@ -101,12 +130,29 @@ function OS(req, res, next) {
     }
 }
 
+// A function to get the data format accepted by the client 
+function AcceptedData(req, res, next){
+    const accept = req.headers.accept;
+    if(!accept || accept.length == 0){
+        console.erroe("Accepted data can't be accessible");
+        res.status(400).send("No accepted data found !");
+    } else{
+        const Accepteddata = accept.split(',');
+        console.log(Accepteddata);
+        next();
+        
+    }
+}
+
 
 
 module.exports = {
     AcceptedLanguages,
     getHost,
     NavigatorBasedOn,
-    OS
+    OS,
+    Navigator,
+    AcceptedData,
+    
 };
 // module.exports = accessHeaders;

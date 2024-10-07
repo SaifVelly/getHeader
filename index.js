@@ -1,17 +1,17 @@
 const express = require('express');
 const app = express();
-const { AcceptedLanguages, getHost, NavigatorBasedOn, OS } = require('./modules/GetHeader');  // Import both correctlyconst app = express();
+const { AcceptedLanguages, getHost, NavigatorBasedOn, OS,Navigator,AcceptedData } = require('./modules/GetHeader');  // Import both correctlyconst app = express();
 app.use(express.json());
 
 
 
 
-app.get('/',AcceptedLanguages, getHost, (req, res) => {
+app.get('/', AcceptedData, (req, res) => {
     res.send(req.headers);
 });
 
 
-app.get('/test', OS, (req, res) => {
+app.get('/test', Navigator, (req, res) => {
     res.send(req.headers);
 });
 app.get('/p',NavigatorBasedOn, (req, res) => {
