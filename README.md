@@ -1,4 +1,4 @@
-## HTTP Header Extractor
+## HTTP GET Header Extractor
 
 ### Introduction
 
