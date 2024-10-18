@@ -136,13 +136,77 @@ function AcceptedData(req, res, next){
     if(!accept || accept.length == 0){
         console.erroe("Accepted data can't be accessible");
         res.status(400).send("No accepted data found !");
-    } else{
+    } try{
         const Accepteddata = accept.split(',');
         console.log(Accepteddata);
         next();
         
+    } catch(err){
+        console.error("Error extracting Accepted data information : " + err);
+        return next(err);
+
     }
 }
+
+// A functino to get the type of estabilished connection between the server and the nav
+function ConnectionType (req, res, next){
+    const connection = req.headers.connection;
+    if(!ConnectionType) {
+        console.error("Connection type can't be accessible");
+        res.status(400).send("No connection element found at the header !");
+    } 
+    try{
+        console.log("The type of connection is : "+connection);
+        next();
+    } catch(err){
+        console.error("Error extracting the type of connection : " + err);
+        return next(err);
+    }
+}
+
+//A fucntion to get the types of content encoding that the client is willing to accept in the response 
+function EncodingType (req, res, next){
+    const encoding = req.headers['accept-encoding'];
+    const EncodType = encoding.split(',');
+    if(!encoding){
+        console.error("The data encoding type cannot be accessible !");
+        res.status(400).send("No data encoding type found at the header !");
+
+    }
+    try{
+        console.log(EncodType);
+        next();
+    } catch(err){
+        console.error("Error extracting the data type encoding : "+err);
+        return next(err);
+    }
+}
+
+
+
+// A function to check if the HTTPS is allowed or not 
+function HTTPSAccepted (req, res, next){
+    const accepted = req.headers['upgrade-insecure-requests'];
+    if(!accepted){
+        console.error("Checking if HTTPS is allowed can't be accessible !");
+    }
+    try{
+        if(accepted == 1){
+            console.log("Yes, HTTPS is allowed");
+        } else{
+            console.log("HTTPS is not allowd !");
+        }
+        next();
+
+    } catch(err){
+        console.error("Error checking is HTTPS is allowed or not : "+err);
+        return next(err);
+    }
+}
+
+
+
+
 
 
 
@@ -153,6 +217,9 @@ module.exports = {
     OS,
     Navigator,
     AcceptedData,
+    ConnectionType,
+    EncodingType,
+    HTTPSAccepted
     
 };
 // module.exports = accessHeaders;
